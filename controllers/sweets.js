@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
 import { sweetModel, sweetValidator, sweetValidatorUpdate } from "../models/sweets.js";
-//////////////////////////////////////////
 
 const getAllSweets = async (req, res) => {
-    let { element } = req.query || 4;
+    let { limit } = req.query || 4;
     let { search } = req.query;
     let { page } = req.query || 1;
     let expressionToSearch = RegExp(`${search}`);
@@ -12,7 +11,8 @@ const getAllSweets = async (req, res) => {
         if (search) {
             filter.name = expressionToSearch;
         }
-        const allSweets = await sweetModel.find(filter);
+        const allSweets = await sweetModel.find(filter).limit(parseInt(limit))
+        .skip((parseInt(page) - 1) * parseInt(limit));
         console.log(allSweets);
         res.json(allSweets);
     }

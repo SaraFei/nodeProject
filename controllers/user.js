@@ -2,7 +2,7 @@ import { hash, compare } from "bcrypt";
 import { UserModel, userValidator, userValidatorLogin } from "../models/user.js";
 import { gnerateToken } from "../middleware/generateToken.js";
 
-
+///על כל כתובת מייל הוא רושם לי שיש כזה במערכת
 const addUser = async (req, res) => {
     let {  userName, email, userPwd, role, date } = req.body;
     let validate = userValidator(req.body);
@@ -10,7 +10,7 @@ const addUser = async (req, res) => {
         return res.status(403).json({ type: "validate error", message: validate.error.details[0].message })
     }
     try {
-        let sameUser = await UserModel.find({email:email});
+        let sameUser = await UserModel.findOne({email:email});
         if (sameUser) {
             return res.status(409).json({ type: "add user error", message: "there is a user with such email" });
         }
