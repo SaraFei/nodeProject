@@ -8,7 +8,7 @@ export const gnerateToken = (user) => {
         role: user.role
     }
     const token = jwt.sign(data, jwtSecretKey, {
-        expiresIn: '10m'
+        expiresIn: '60m'
     })
     return token;
 }

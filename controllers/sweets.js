@@ -2,9 +2,10 @@ import mongoose from "mongoose";
 import { sweetModel, sweetValidator, sweetValidatorUpdate } from "../models/sweets.js";
 
 const getAllSweets = async (req, res) => {
-    let { limit } = req.query || 4;
-    let { search } = req.query;
-    let { page } = req.query || 1;
+    // let { limit } = req.query || 4;
+    // let { search } = req.query;
+    // let { page } = req.query || 1;
+    let { limit = 6, search, page = 1 } = req.query;
     let expressionToSearch = RegExp(`${search}`);
     try {
         let filter = {};
@@ -12,9 +13,10 @@ const getAllSweets = async (req, res) => {
             filter.name = expressionToSearch;
         }
         const allSweets = await sweetModel.find(filter).limit(parseInt(limit))
-        .skip((parseInt(page) - 1) * parseInt(limit));
+            .skip((parseInt(page) - 1) * parseInt(limit));
         console.log(allSweets);
         res.json(allSweets);
+        return allSweets;
     }
     catch (err) {
         res.status(400).send({ type: "get sweets error", message: "התרחשה שגיאה בעת הבאת הממתקים מהשרת" })
@@ -96,5 +98,45 @@ const addSweet = async (req, res) => {
         res.json(err);
     }
 }
-export { getAllSweets, getSweetById, updateSweet, deleteSweet, addSweet };
+
+// const getQtyOfSweets2 = async (req, res) => {
+//     try {
+//         let allSweets;
+//         allSweets = await getAllSweets(req, res);
+//         if (allSweets) {
+//             let count = allSweets.length;
+//             console.log(count);
+//             return res.json({count})
+
+//         }
+//         else {
+//             return res.status(200).send({ type: "undefine  sweetsArray", message: "the problem in the getAllSweet function" }); // Return 0 if allSweets is falsy
+//         }
+//     }
+//     catch (err) {
+//         res.status(400).json(err);
+//     }
+
+// }
+
+
+
+const getQtyOfSweets = async (req, res) => {
+    try {
+        let cnt = 0;
+        const allSweets = await sweetModel.find({});
+        for (let i = 0; i < allSweets.length; i++) {
+            cnt++;
+
+        }
+        // res.send(cnt);
+        console.log(cnt);
+        return res.json({ cnt });
+
+    }
+    catch (err) {
+        res.status(400).send({ type: "get sweets error", message: "התרחשה שגיאה בעת הבאת הממתקים מהשרת" })
+    }
+}
+export { getAllSweets, getSweetById, updateSweet, deleteSweet, addSweet, getQtyOfSweets };
 

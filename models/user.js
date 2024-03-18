@@ -12,10 +12,10 @@ export const UserModel = mongoose.model("sweetsUser", userSchema);
 
 export const userValidator = (user) => {
     const schema = Joi.object({
-        userName: Joi.string().pattern(new RegExp(/[A-Za-z]+/)).required(),
+        userName: Joi.string().pattern(new RegExp(/^[A-Za-zא-ת\s]+$/)).required(),
         email: Joi.string().email().required(),
         userPwd: Joi.string().min(6).max(8).required(),
-        role:Joi.string().valid("admin","user"),
+        role: Joi.string().valid("admin", "user"),
         date: Joi.date().less('now')
     })
     return schema.validate(user);
@@ -23,7 +23,7 @@ export const userValidator = (user) => {
 
 export const userValidatorLogin = (user) => {
     const schema = Joi.object({
-        userName: Joi.string().pattern(/[A-Za-z]+/).required(),
+        email: Joi.string().email().required(),
         userPwd: Joi.string().min(6).max(8).required()
     })
     return schema.validate(user);

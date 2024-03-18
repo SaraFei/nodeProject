@@ -7,6 +7,6 @@ router.get("/", sweetsControllers.getAllSweets);
 router.get("/:sweetCode", sweetsControllers.getSweetById);
 router.put("/:sweetCode", authAdmin,sweetsControllers.updateSweet);
 router.post("/",authAdmin, sweetsControllers.addSweet);
-router.delete("/:sweetCode",authAdmin, sweetsControllers.deleteSweet);
+router.delete("/:id",authAdmin, sweetsControllers.deleteSweet);
 
 export default router;
