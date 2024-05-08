@@ -47,7 +47,7 @@ const updateSweet = async (req, res) => {
             return res.status(403).json({ type: "error validate", message: validate.error.details[0].message })
         }
 
-        else if (!mongoose.isValidObjectId(id)) {
+        if (!mongoose.isValidObjectId(id)) {
             return res.status(400).send({ type: "error sweetCode", message: "sweetCode is not valied" });
         }
         let sweetToUpdate = await sweetModel.findById(id);
@@ -79,7 +79,7 @@ const deleteSweet = async (req, res) => {
 }
 const addSweet = async (req, res) => {
 
-    let { sweetName, sweetPrice, sweetMenueFactureDate, sweetAmount } = req.body;
+    let { sweetName, sweetPrice, sweetMenueFactureDate, sweetAmount,imgSweet } = req.body;
     let validate = sweetValidator(req.body);
     if (validate.error) {
         return res.status(403).json({ type: "error validate", message: validate.error.details[0].message })
@@ -90,7 +90,7 @@ const addSweet = async (req, res) => {
         if (sameSweet) {
             return res.status(409).json({ type: "same sweet", message: "there is a sweet with such sweetCode" })
         }
-        let newSweet = new sweetModel({ sweetName, sweetPrice, sweetMenueFactureDate, sweetAmount });
+        let newSweet = new sweetModel({ sweetName, sweetPrice, sweetMenueFactureDate, sweetAmount ,imgSweet});
         await newSweet.save();
         res.json(newSweet);
     }

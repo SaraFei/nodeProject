@@ -1,12 +1,12 @@
 import express from "express";
-import cors from "cors"
+import cors from "cors"//מה הקטע שלו?
 import { config } from "dotenv";
 
 import sweetsRouter from "./routs/sweets.js"
 import userRouter from "./routs/user.js"
 import orderRouter from "./routs/order.js"
 import OtysweetsRouter from "./routs/sweetsQty.js"
-import { connectToDB } from "./config/DBConfig.js";
+import { connectToDB } from "./config/DBConfig.js";//למה מפרידים אותו
 import{errorHandling}  from "./middleware/errorHandling.js";
 
 

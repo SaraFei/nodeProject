@@ -6,18 +6,22 @@ const sweetSchema = mongoose.Schema({
     sweetPrice: Number,
     sweetMenueFactureDate: Date,
     sweetAmount: Number,
-    imgSweet: String
+    imgSweet: String,
+    data:String,
+    type:String
 })
 
 export const sweetModel = mongoose.model("sweets", sweetSchema)
 
 export const sweetValidator = (sweet) => {
     const schema = Joi.object({
-        sweetName: Joi.string().pattern(new RegExp(/[A-Za-z]+/)).required(),
+        sweetName: Joi.string().pattern(new RegExp(/[A-Za-zא-ת]+/)).required(),
         sweetPrice: Joi.number().min(1).required(),
         sweetMenueFactureDate: Joi.date(),
         sweetAmount: Joi.number(),
-        imgSweet: Joi.string()
+        imgSweet: Joi.string(),
+        data: Joi.string(),
+        type: Joi.string()
     });
     return schema.validate(sweet);
 
