@@ -14,6 +14,8 @@ const getAllOrders = async (req, res) => {
 
 const addOrder = async (req, res) => {
     let { id } = req.body;
+    console.log("use id",req);
+    let invitingCode = req.user._id;
     let validate = orderValidator(req.body);
     if (validate.error) {
         return res.status(400).json({ type: "order valied error", message: "there is an error by order details" + validate.error.details[0].message })
@@ -23,7 +25,9 @@ const addOrder = async (req, res) => {
         if (sameOrder) {
             return res.status(409).json({ type: "same order", message: "there is a order with such ID" });
         }
-        let newOrder = new OrderModel(req.body);
+        let newOrder = new OrderModel({...req.body,customerCode:invitingCode});
+        // let newOrder = new OrderModel(req.body);
+
         await newOrder.save();
         res.json(newOrder);
 

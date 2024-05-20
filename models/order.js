@@ -26,7 +26,7 @@ export const orderValidator = (order) => {
         deliveryDate: Joi.date(),
         customerAddress: Joi.string(),
         //-----------------טעון בדיקה
-        customerCode: Joi.string().min(9).max(9).pattern(/^\d+$/),
+        customerCode: Joi.string().min(9).max(9).pattern(/^\d+$/).required(),
         productsDetails: Joi.array().items(minimalProductSchema).required(),
         orderShipped: Joi.boolean()
     })

@@ -28,6 +28,7 @@ export const authUser = async (req, res, next) => {
         if (!confirmed) {
             return res.status(401).json({ type: "not authoried", message: "the user is not authoried" });
         }
+        req.user=confirmed;
         next();
     }
     catch (err) {
