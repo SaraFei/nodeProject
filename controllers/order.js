@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { OrderModel, orderValidator } from "../models/order.js";
+import { sweetModel } from "../models/sweets.js";
 
 const getAllOrders = async (req, res) => {
 
@@ -13,8 +14,8 @@ const getAllOrders = async (req, res) => {
 }
 
 const addOrder = async (req, res) => {
-    let { id } = req.body;
-    console.log("use id",req);
+    let { id,sweetName } = req.body;
+    console.log("use id", req);
     let invitingCode = req.user._id;
     let validate = orderValidator(req.body);
     if (validate.error) {
@@ -25,9 +26,8 @@ const addOrder = async (req, res) => {
         if (sameOrder) {
             return res.status(409).json({ type: "same order", message: "there is a order with such ID" });
         }
-        let newOrder = new OrderModel({...req.body,customerCode:invitingCode});
+        let newOrder = new OrderModel({ ...req.body, customerCode: invitingCode });
         // let newOrder = new OrderModel(req.body);
-
         await newOrder.save();
         res.json(newOrder);
 
@@ -40,7 +40,7 @@ const addOrder = async (req, res) => {
 
 const deleteOrder = async (req, res) => {
     let { id } = req.params;//איי די של הזמנה
-    let { _id,role } = req.user;
+    let { _id, role } = req.user;
     try {
         if (!mongoose.isValidObjectId(id)) {
             return res.status(400).send("id is not valied");
@@ -50,10 +50,10 @@ const deleteOrder = async (req, res) => {
             return res.status(400).json({ type: "delete order ", message: "there is not order withsuch ID" });
         }
         //או שאתה לא מנהל, או שהת.ז לא זהה
-        if (!orderToDelete.customerCode ==_id || !role == 'admin') {
+        if (!orderToDelete.customerCode == _id || !role == 'admin') {
             res.status(409).json({ type: "not aouthoried", nessage: "the ID is not the same as what was typed" })
         }
-        
+
         if (orderToDelete.orderShipped == true) {
             return res.json("sorry, the order shipped the order cannot be deleted");
         }
@@ -98,7 +98,7 @@ const getOrderById = async (req, res) => {
         if (id && role == 'admin') {
             _id = id;
         }
-        let allOrdersById = await OrderModel.find({customerCode:_id});
+        let allOrdersById = await OrderModel.find({ customerCode: _id });
         res.json(allOrdersById);
     }
     catch (err) {

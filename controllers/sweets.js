@@ -12,6 +12,28 @@ const getAllSweets = async (req, res) => {
         if (search) {
             filter.name = expressionToSearch;
         }
+
+        const allSweets = await sweetModel.find(filter).limit(parseInt(limit))
+            .skip((parseInt(page) - 1) * parseInt(limit));
+        console.log(allSweets);
+        res.json(allSweets);
+        return allSweets;
+    }
+    catch (err) {
+        res.status(400).send({ type: "get sweets error", message: "התרחשה שגיאה בעת הבאת הממתקים מהשרת" })
+    }
+}
+
+const getFilteredSweets = async (req, res) => {
+
+    let { limit = 6, search, page = 1 } = req.query;
+    let expressionToSearch = RegExp(`${search}`);
+    try {
+
+        //find(type:expressionToSearch)
+        //ובכלל למה תצריך פילטר??
+        let filter = { type:expressionToSearch }; // Filter by type 'מתוקים'
+       
         const allSweets = await sweetModel.find(filter).limit(parseInt(limit))
             .skip((parseInt(page) - 1) * parseInt(limit));
         console.log(allSweets);
@@ -79,7 +101,7 @@ const deleteSweet = async (req, res) => {
 }
 const addSweet = async (req, res) => {
 
-    let { sweetName, sweetPrice, sweetMenueFactureDate, sweetAmount,imgSweet } = req.body;
+    let { sweetName, sweetPrice, sweetMenueFactureDate, sweetAmount, imgSweet,type } = req.body;
     let validate = sweetValidator(req.body);
     if (validate.error) {
         return res.status(403).json({ type: "error validate", message: validate.error.details[0].message })
@@ -90,7 +112,7 @@ const addSweet = async (req, res) => {
         if (sameSweet) {
             return res.status(409).json({ type: "same sweet", message: "there is a sweet with such sweetCode" })
         }
-        let newSweet = new sweetModel({ sweetName, sweetPrice, sweetMenueFactureDate, sweetAmount ,imgSweet});
+        let newSweet = new sweetModel({ sweetName, sweetPrice, sweetMenueFactureDate, sweetAmount, imgSweet ,type});
         await newSweet.save();
         res.json(newSweet);
     }
@@ -138,5 +160,6 @@ const getQtyOfSweets = async (req, res) => {
         res.status(400).send({ type: "get sweets error", message: "התרחשה שגיאה בעת הבאת הממתקים מהשרת" })
     }
 }
-export { getAllSweets, getSweetById, updateSweet, deleteSweet, addSweet, getQtyOfSweets };
+
+export { getAllSweets, getSweetById, updateSweet, deleteSweet, addSweet, getQtyOfSweets ,getFilteredSweets};
 
